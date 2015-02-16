@@ -14,6 +14,7 @@ describe('Parser', function(){
           assert('NOTICE' == msg.command);
           assert('*' == msg.params);
           assert('*** Looking up your hostname...' == msg.trailing);
+          assert('' === msg.tags);
           assert(msg.string);
           break;
         case 1:
@@ -21,12 +22,21 @@ describe('Parser', function(){
           assert('ERROR' == msg.command);
           assert('' === msg.params);
           assert('Closing Link: 127.0.0.1 (Connection timed out)' == msg.trailing);
+          assert('' === msg.tags);
           break;
         case 2:
           assert('tjholowaychuk!~tjholoway@S01067cb21b2fd643.gv.shawcable.net' == msg.prefix);
           assert('JOIN' == msg.command);
           assert('#express' == msg.params);
           assert('' === msg.trailing);
+          assert('' === msg.tags);
+          break;
+        case 3:
+          assert('nick!ident@host.com' == msg.prefix);
+          assert('PRIVMSG' == msg.command);
+          assert('me' == msg.params);
+          assert('Hello' == msg.trailing);
+          assert('aaa=bbb;ccc;example.com/ddd=eee' == msg.tags);
           done();
           break;
       }
@@ -35,5 +45,6 @@ describe('Parser', function(){
     parser.write(':hitchcock.freenode.net NOTICE * :*** Looking up your hostname...\r\n');
     parser.write('ERROR :Closing Link: 127.0.0.1 (Connection timed out)\r\n');
     parser.write(':tjholowaychuk!~tjholoway@S01067cb21b2fd643.gv.shawcable.net JOIN #express\r\n');
+    parser.write('@aaa=bbb;ccc;example.com/ddd=eee :nick!ident@host.com PRIVMSG me :Hello\r\n');
   })
 })

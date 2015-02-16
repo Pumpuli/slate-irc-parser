@@ -57,6 +57,13 @@ Parser.prototype.online = function(line){
   debug('line `%s`', line);
   var orig = line = line.trim();
 
+  // message tags
+  if ('@' == line[0]) {
+    var i = line.indexOf(' ');
+    var tags = line.slice(1, i);
+    line = line.slice(i + 1);
+  }
+
   // prefix
   if (':' == line[0]) {
     var i = line.indexOf(' ');
@@ -81,6 +88,7 @@ Parser.prototype.online = function(line){
     command: command,
     params: params || '',
     trailing: line || '',
+    tags: tags || '',
     string: orig
   };
 
